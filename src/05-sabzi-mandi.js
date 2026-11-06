@@ -31,4 +31,16 @@
  */
 export function sabziMandiBill(shoppingList, priceList) {
   // Your code here
+  const items = []
+  for (const sabji of shoppingList){
+    if(!Object.keys(priceList).includes(sabji.name) || priceList[sabji.name]>80){
+      continue;
+    }
+    items.push({name:sabji.name,qty:sabji.qty,cost:priceList[sabji.name]*sabji.qty})
+  }
+
+ const totalBill = items.reduce((acc,curr)=>acc + curr.cost,0)
+
+ return {items,totalBill}
+
 }

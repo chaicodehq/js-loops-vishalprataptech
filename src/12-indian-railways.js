@@ -22,7 +22,7 @@
  *        Result: { name, trainNumber, class: preferred, status: "confirmed" }
  *     3. If preferred not available, try fallback class
  *        Result: { name, trainNumber, class: fallback, status: "confirmed" }
- *     4. If neither available, waitlist the passenger
+ *     4. If neither available, waitlist the passenger 
  *        Result: { name, trainNumber, class: preferred, status: "waitlisted" }
  *     5. If train not found, result:
  *        { name, trainNumber, class: null, status: "train_not_found" }
@@ -45,5 +45,52 @@
  *   // => [{ name: "Rahul", trainNumber: "12345", class: "sleeper", status: "confirmed" }]
  */
 export function railwayReservation(passengers, trains) {
-  // Your code here
+  // Your code here  
+  if(!Array.isArray(passengers) || passengers.length ===0 || !Array.isArray(trains) || trains.length ===0){
+  return []
+  }
+  
+  const result = []
+  for (let i = 0; i< passengers.length ; i++){
+  const passenger = passengers[i]
+  if(trains.filter((element)=>element.trainNumber === passenger.trainNumber).length === 0){
+    result.push({name:passenger.name,trainNumber:passenger.trainNumber,class:null,status:"train_not_found" })
+    return result
+  }
+  const matchedTrain = trains.filter((element)=>element.trainNumber === passenger.trainNumber)[0]
+  
+  const arrayOfSeats = Object.entries(matchedTrain.seats)
+  let passengerClass = null
+  let status = null
+  for (const [seatName,avalableNumber] of arrayOfSeats){
+    
+    const passengerPreferredSeat = passenger.preferred
+   
+    if(passengerPreferredSeat === seatName && avalableNumber>0){
+      passengerClass = passengerPreferredSeat
+      matchedTrain.seats[passengerPreferredSeat] = avalableNumber -1
+      status = 'confirmed'
+    }
+  }
+ 
+if(passengerClass === null && status === null){
+ for (const [seatName,avalableNumber] of arrayOfSeats){
+    
+    
+    const passengerFallbackSeat = passenger.fallback
+    if(passengerFallbackSeat === seatName && avalableNumber>0){
+      passengerClass = passengerFallbackSeat
+      matchedTrain.seats[passengerFallbackSeat] = avalableNumber -1
+      status = 'confirmed'
+    }
+  }
+}
+if(passengerClass === null && status === null){
+  passengerClass = passenger.preferred
+  status = 'waitlisted'
+}
+  result.push({name:passenger.name,trainNumber:passenger.trainNumber,class:passengerClass,status})
+  }
+
+  return result
 }

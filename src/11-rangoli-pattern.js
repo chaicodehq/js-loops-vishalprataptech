@@ -35,6 +35,25 @@
  *   rangoli(2) // => [" *", "* *", " *"]
  *   rangoli(3) // => ["  *", " * *", "* * *", " * *", "  *"]
  */
+
 export function rangoli(n) {
-  // Your code here
+  if (typeof n !== 'number' || Number.isNaN(n) || n <= 0 || !Number.isInteger(n)) {
+    return [];
+  }
+  
+  const numberOfRows = (2 * n) - 1;
+  const result = [];
+  
+  for (let i = 1; i <= numberOfRows; i++) {
+    const numberOfSpaces = Math.abs(n - i);
+    const numberOfStars = n - numberOfSpaces;
+    
+    // Generate stars separated by a single space, with leading spaces
+    const stars = Array(numberOfStars).fill('*').join(' ');
+    const spaces = ' '.repeat(numberOfSpaces);
+    
+    result.push(spaces + stars);
+  }
+  
+  return result;
 }
